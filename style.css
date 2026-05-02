@@ -144,6 +144,13 @@ header p {
     box-shadow: 0 10px 20px rgba(106, 204, 117, 0.15);
 }
 
+.cta-button:disabled,
+.cta-button[aria-busy="true"] {
+    cursor: wait;
+    opacity: 0.65;
+    transform: none;
+}
+
 /* --- Main Content --- */
 main {
     padding: 0 5%;
@@ -164,7 +171,7 @@ main > section > p {
 /* --- Upload Section --- */
 .chart-upload-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 24px;
     margin-bottom: 54px;
 }
@@ -200,18 +207,22 @@ main > section > p {
 }
 
 .upload-placeholder::before {
-    background-image: url("images/headchart_image.png");
+    background-image: url("images/headchart_image.png?v=2");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
     content: "";
     inset: 0;
-    opacity: 0.12;
+    opacity: 0.34;
     position: absolute;
     z-index: 0;
 }
 
 .upload-placeholder.has-uploaded-image::before {
+    display: none;
+}
+
+.analysis-review-page .upload-placeholder::before {
     display: none;
 }
 
@@ -676,6 +687,7 @@ footer p { margin: 0; }
 @media (max-width: 900px) {
     .chart-upload-container {
         grid-template-columns: 1fr;
+        gap: 18px;
     }
 
     .simple-upload-grid,

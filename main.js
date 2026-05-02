@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         startAnalysisBtn.disabled = true;
         startAnalysisBtn.textContent = '분석 중...';
+        startAnalysisBtn.setAttribute('aria-busy', 'true');
 
         try {
             const analysisPromises = imagesData.map(async (imageData) => {
@@ -62,6 +63,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     throw new Error(message);
                 }
                 const result = await response.json();
+                if (!result.analysis) {
+                    throw new Error('분석 결과가 비어 있습니다.');
+                }
                 return {
                     ...imageData,
                     analysis: result.analysis,
@@ -79,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
             alert(`분석에 실패했습니다: ${error.message}`);
             startAnalysisBtn.disabled = false;
             startAnalysisBtn.textContent = '분석 시작';
+            startAnalysisBtn.removeAttribute('aria-busy');
         }
     }
 

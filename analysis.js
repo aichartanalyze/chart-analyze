@@ -16,7 +16,28 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const results = JSON.parse(resultsJSON);
+        let results;
+        try {
+            results = JSON.parse(resultsJSON);
+        } catch (error) {
+            message.textContent = '분석 데이터를 읽을 수 없습니다.';
+            imageSlots.forEach(slot => {
+                slot.innerHTML = '<span class="material-icons">image_not_supported</span><p>이미지 없음</p>';
+            });
+            resultSlots.forEach(slot => {
+                renderEmptyAnalysis(slot, '분석 데이터 오류');
+            });
+            return;
+        }
+
+        if (!Array.isArray(results)) {
+            message.textContent = '분석 데이터 형식이 올바르지 않습니다.';
+            resultSlots.forEach(slot => {
+                renderEmptyAnalysis(slot, '분석 데이터 오류');
+            });
+            return;
+        }
+
         message.textContent = '분석 완료';
 
         // Clear all slots first
@@ -49,6 +70,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function parseAnalysis(markdown) {
+        if (markdown && typeof markdown === 'object') {
+            return markdown;
+        }
+
+        if (typeof markdown !== 'string') {
+            return {};
+        }
+
         try {
             return JSON.parse(markdown);
         } catch (error) {
@@ -85,46 +114,42 @@ document.addEventListener('DOMContentLoaded', () => {
         const statusInfo = statusMap[status] || { className: 'pending', icon: 'help_outline' };
 
         slot.className = `chart-flow-result ${statusInfo.className}`;
-        slot.innerHTML = `
-            <div class="flow-row status-row">
-                <span>상태</span>
-                <strong><span class="material-icons">${statusInfo.icon}</span>${status}</strong>
-            </div>
-            <div class="flow-row">
-                <span>저항선</span>
-                <strong>${resistance}</strong>
-            </div>
-            <div class="flow-row">
-                <span>지지선</span>
-                <strong>${support}</strong>
-            </div>
-            <div class="flow-row position-row">
-                <span>포지션</span>
-                <strong>${position}</strong>
-            </div>
-        `;
+        slot.replaceChildren(
+            createFlowRow('상태', status, 'status-row', statusInfo.icon),
+            createFlowRow('저항선', resistance),
+            createFlowRow('지지선', support),
+            createFlowRow('포지션', position, 'position-row')
+        );
     }
 
     function renderEmptyAnalysis(slot, value) {
         slot.className = 'chart-flow-result pending';
-        slot.innerHTML = `
-            <div class="flow-row status-row">
-                <span>상태</span>
-                <strong>${value}</strong>
-            </div>
-            <div class="flow-row">
-                <span>저항선</span>
-                <strong>${value}</strong>
-            </div>
-            <div class="flow-row">
-                <span>지지선</span>
-                <strong>${value}</strong>
-            </div>
-            <div class="flow-row position-row">
-                <span>포지션</span>
-                <strong>${value}</strong>
-            </div>
-        `;
+        slot.replaceChildren(
+            createFlowRow('상태', value, 'status-row'),
+            createFlowRow('저항선', value),
+            createFlowRow('지지선', value),
+            createFlowRow('포지션', value, 'position-row')
+        );
+    }
+
+    function createFlowRow(label, value, extraClass = '', icon = '') {
+        const row = document.createElement('div');
+        row.className = `flow-row ${extraClass}`.trim();
+
+        const labelElement = document.createElement('span');
+        labelElement.textContent = label;
+
+        const valueElement = document.createElement('strong');
+        if (icon) {
+            const iconElement = document.createElement('span');
+            iconElement.className = 'material-icons';
+            iconElement.textContent = icon;
+            valueElement.appendChild(iconElement);
+        }
+        valueElement.append(document.createTextNode(value));
+
+        row.append(labelElement, valueElement);
+        return row;
     }
 
     displayAnalysisResults();
