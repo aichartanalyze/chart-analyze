@@ -2,6 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const message = document.getElementById('analysis-message');
     const imageSlots = document.querySelectorAll('[data-image-slot]');
     const resultSlots = document.querySelectorAll('[data-result-slot]');
+    const imageModal = document.getElementById('image-modal');
+    const imageModalImg = imageModal?.querySelector('img');
+    const imageModalClose = imageModal?.querySelector('.image-modal-close');
 
     function displayAnalysisResults() {
         const resultsJSON = sessionStorage.getItem('tradingAnalysisResults');
@@ -57,8 +60,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 const img = document.createElement('img');
                 img.src = src;
                 img.alt = `${timeframe} 차트`;
+                const zoomButton = document.createElement('button');
+                zoomButton.type = 'button';
+                zoomButton.className = 'image-zoom-button';
+                zoomButton.setAttribute('aria-label', `${timeframe} 차트 확대`);
+                zoomButton.innerHTML = '<span class="material-icons">zoom_in</span>';
+                zoomButton.addEventListener('click', () => {
+                    openImageModal(src, `${timeframe} 차트`);
+                });
                 imageSlot.innerHTML = ''; // Clear placeholder
-                imageSlot.appendChild(img);
+                imageSlot.append(img, zoomButton);
             }
 
             // Render analysis
@@ -151,6 +162,43 @@ document.addEventListener('DOMContentLoaded', () => {
         row.append(labelElement, valueElement);
         return row;
     }
+
+    function openImageModal(src, alt) {
+        if (!imageModal || !imageModalImg) {
+            return;
+        }
+
+        imageModalImg.src = src;
+        imageModalImg.alt = alt;
+        imageModal.classList.add('is-open');
+        imageModal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('modal-open');
+        imageModalClose?.focus();
+    }
+
+    function closeImageModal() {
+        if (!imageModal || !imageModalImg) {
+            return;
+        }
+
+        imageModal.classList.remove('is-open');
+        imageModal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('modal-open');
+        imageModalImg.removeAttribute('src');
+        imageModalImg.alt = '';
+    }
+
+    imageModalClose?.addEventListener('click', closeImageModal);
+    imageModal?.addEventListener('click', (event) => {
+        if (event.target === imageModal) {
+            closeImageModal();
+        }
+    });
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && imageModal?.classList.contains('is-open')) {
+            closeImageModal();
+        }
+    });
 
     displayAnalysisResults();
 });
