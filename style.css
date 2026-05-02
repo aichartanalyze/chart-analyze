@@ -231,9 +231,16 @@ main > section > p {
     z-index: 1;
 }
 
-.upload-placeholder:hover {
+.upload-placeholder:hover,
+.upload-placeholder:focus-visible,
+.upload-placeholder.is-paste-target {
     background-color: #1c1f24;
     border-color: #6ACC75;
+}
+
+.upload-placeholder:focus-visible {
+    outline: 2px solid rgba(106, 204, 117, 0.45);
+    outline-offset: 3px;
 }
 
 .upload-placeholder .material-icons {

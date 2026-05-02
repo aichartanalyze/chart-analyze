@@ -1,28 +1,67 @@
 document.addEventListener('DOMContentLoaded', () => {
     const startAnalysisBtn = document.querySelector('.start-analysis-section .cta-button');
     const uploadPlaceholders = document.querySelectorAll('.upload-placeholder');
+    let activeUploadZone = null;
+
+    function setActiveUploadZone(zone) {
+        uploadPlaceholders.forEach(placeholder => {
+            placeholder.classList.toggle('is-paste-target', placeholder === zone);
+        });
+        activeUploadZone = zone;
+    }
+
+    function renderImageFile(file, dropZone) {
+        if (!dropZone || !file.type.startsWith('image/')) {
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            dropZone.innerHTML = '';
+            dropZone.classList.add('has-uploaded-image');
+            const img = document.createElement('img');
+            img.src = event.target.result;
+            img.style.maxWidth = '100%';
+            img.style.maxHeight = '100%';
+            img.style.objectFit = 'contain';
+            img.style.borderRadius = '4px';
+            dropZone.appendChild(img);
+        }
+        reader.readAsDataURL(file);
+    }
 
     function handleFileSelect(e, specificZone = null) {
         e.preventDefault();
         e.stopPropagation();
         const dropZone = specificZone || e.currentTarget;
         const files = e.dataTransfer ? e.dataTransfer.files : e.target.files;
-        if (files.length > 0 && dropZone) {
-            const file = files[0];
-            if (file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    dropZone.innerHTML = '';
-                    dropZone.classList.add('has-uploaded-image');
-                    const img = document.createElement('img');
-                    img.src = event.target.result;
-                    img.style.maxWidth = '100%';
-                    img.style.maxHeight = '100%';
-                    img.style.objectFit = 'contain';
-                    img.style.borderRadius = '4px';
-                    dropZone.appendChild(img);
-                }
-                reader.readAsDataURL(file);
+        if (files.length > 0) {
+            renderImageFile(files[0], dropZone);
+        }
+    }
+
+    function findPasteTarget() {
+        if (activeUploadZone) {
+            return activeUploadZone;
+        }
+
+        return Array.from(uploadPlaceholders).find(zone => !zone.querySelector('img')) || uploadPlaceholders[0];
+    }
+
+    function handlePaste(e) {
+        const items = Array.from(e.clipboardData?.items || []);
+        const imageItem = items.find(item => item.type.startsWith('image/'));
+        if (!imageItem) {
+            return;
+        }
+
+        e.preventDefault();
+        const file = imageItem.getAsFile();
+        if (file) {
+            const targetZone = findPasteTarget();
+            if (targetZone) {
+                setActiveUploadZone(targetZone);
+                renderImageFile(file, targetZone);
             }
         }
     }
@@ -94,7 +133,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     uploadPlaceholders.forEach(zone => {
+        zone.tabIndex = 0;
+        zone.addEventListener('focus', () => setActiveUploadZone(zone));
+        zone.addEventListener('pointerenter', () => setActiveUploadZone(zone));
         zone.addEventListener('click', () => {
+            setActiveUploadZone(zone);
             const input = document.createElement('input');
             input.type = 'file';
             input.accept = 'image/*';
@@ -106,8 +149,16 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.appendChild(input);
             input.click();
         });
+        zone.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                zone.click();
+            }
+        });
         zone.addEventListener('dragover', (e) => { e.preventDefault(); e.stopPropagation(); zone.style.borderColor = '#6ACC75'; });
         zone.addEventListener('dragleave', (e) => { e.preventDefault(); e.stopPropagation(); zone.style.borderColor = 'var(--border-color)'; });
         zone.addEventListener('drop', (e) => handleFileSelect(e, zone));
     });
+
+    document.addEventListener('paste', handlePaste);
 });
