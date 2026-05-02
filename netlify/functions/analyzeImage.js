@@ -51,7 +51,7 @@ function normalizeAnalysis(text) {
         '상태': '횡보',
         '저항선': 'N/A',
         '지지선': 'N/A',
-        '포지션': '차트 이미지 기준으로 추가 확인이 필요합니다.',
+        '분석': '차트 이미지 기준으로 추가 확인이 필요합니다.',
     };
 
     try {
@@ -60,7 +60,7 @@ function normalizeAnalysis(text) {
             '상태': parsed['상태'] || fallback['상태'],
             '저항선': parsed['저항선'] || fallback['저항선'],
             '지지선': parsed['지지선'] || fallback['지지선'],
-            '포지션': parsed['포지션'] || fallback['포지션'],
+            '분석': parsed['분석'] || parsed['포지션'] || fallback['분석'],
         });
     } catch (error) {
         return JSON.stringify(fallback);
@@ -109,7 +109,7 @@ exports.handler = async (event) => {
                                 text: [
                                     '차트 이미지를 보고 흐름을 단순 분석하세요.',
                                     '반드시 JSON만 반환하세요.',
-                                    '키는 "상태", "저항선", "지지선", "포지션"만 사용하세요.',
+                                    '키는 "상태", "저항선", "지지선", "분석"만 사용하세요.',
                                     '"상태" 값은 "상승", "횡보", "하강" 중 하나여야 합니다.',
                                     '저항선과 지지선은 이미지에서 읽을 수 없으면 "N/A"로 쓰세요.',
                                     '투자 조언처럼 단정하지 말고 관찰 가능한 흐름만 짧게 적으세요.',

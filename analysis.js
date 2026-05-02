@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const status = data['상태'] || 'N/A';
         const resistance = data['저항선'] || 'N/A';
         const support = data['지지선'] || 'N/A';
-        const position = data['포지션'] || 'N/A';
+        const analysisText = data['분석'] || data['포지션'] || 'N/A';
 
         const statusMap = {
             '상승': { className: 'up', icon: 'trending_up' },
@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
             createFlowRow('상태', status, 'status-row', statusInfo.icon),
             createFlowRow('저항선', resistance),
             createFlowRow('지지선', support),
-            createFlowRow('포지션', position, 'position-row')
+            createFlowRow('분석', analysisText, 'position-row')
         );
     }
 
@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
             createFlowRow('상태', value, 'status-row'),
             createFlowRow('저항선', value),
             createFlowRow('지지선', value),
-            createFlowRow('포지션', value, 'position-row')
+            createFlowRow('분석', value, 'position-row')
         );
     }
 
