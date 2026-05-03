@@ -135,7 +135,7 @@ header {
 }
 
 .header-content {
-    max-width: 520px;
+    max-width: 920px;
     z-index: 2;
 }
 
@@ -147,11 +147,17 @@ header h1 {
 }
 
 header p {
-    font-size: 0.95rem;
     color: var(--text-muted-color);
+    font-size: 0.95rem;
     line-height: 1.6;
     margin: 0;
-    max-width: 520px;
+    max-width: 920px;
+}
+
+@media (min-width: 901px) {
+    header p {
+        white-space: nowrap;
+    }
 }
 
 .cta-button {
