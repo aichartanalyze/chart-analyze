@@ -624,6 +624,12 @@ body.modal-open {
     margin-bottom: 8px;
 }
 
+.overall-analysis-count {
+    color: var(--text-muted-color);
+    font-size: 0.95rem;
+    margin: 0 0 10px;
+}
+
 .overall-analysis-card p {
     color: var(--text-muted-color);
     line-height: 1.6;

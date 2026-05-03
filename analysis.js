@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultSlots = document.querySelectorAll('[data-result-slot]');
     const overallAnalysis = document.getElementById('overall-analysis');
     const overallStatus = overallAnalysis?.querySelector('[data-overall-status]');
+    const overallCount = overallAnalysis?.querySelector('[data-overall-count]');
     const overallDescription = overallAnalysis?.querySelector('[data-overall-description]');
     const imageModal = document.getElementById('image-modal');
     const imageModalImg = imageModal?.querySelector('img');
@@ -95,14 +96,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const total = counts.up + counts.down + counts.sideways;
         if (total === 0) {
-            return { className: 'pending', labelKey: 'analysis.overallInsufficient', descriptionKey: 'analysis.overallInsufficientDescription' };
+            return {
+                className: 'pending',
+                labelKey: 'analysis.overallInsufficient',
+                descriptionKey: 'analysis.overallInsufficientDescription',
+                counts,
+            };
         }
 
         const maxCount = Math.max(counts.up, counts.down, counts.sideways);
         const leaders = Object.entries(counts).filter(([, count]) => count === maxCount).map(([key]) => key);
 
         if (leaders.length !== 1) {
-            return { className: 'mixed', labelKey: 'analysis.overallMixed', descriptionKey: 'analysis.overallMixedDescription' };
+            return {
+                className: 'mixed',
+                labelKey: 'analysis.overallMixed',
+                descriptionKey: 'analysis.overallMixedDescription',
+                counts,
+            };
         }
 
         const leader = leaders[0];
@@ -112,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
             sideways: { labelKey: 'analysis.overallSideways', descriptionKey: 'analysis.overallSidewaysDescription' },
         };
 
-        return { className: leader, ...keyMap[leader] };
+        return { className: leader, ...keyMap[leader], counts };
     }
 
     function renderOverallAnalysis(parsedResults) {
@@ -124,6 +135,9 @@ document.addEventListener('DOMContentLoaded', () => {
         overallAnalysis.className = `overall-analysis-card ${result.className}`;
         overallStatus.textContent = t(result.labelKey);
         overallDescription.textContent = t(result.descriptionKey);
+        if (overallCount) {
+            overallCount.textContent = t('analysis.overallCount', result.counts || { up: 0, sideways: 0, down: 0 });
+        }
     }
 
     function renderNoImageSlots() {
