@@ -1,5 +1,5 @@
 (function() {
-    const supportedLanguages = ['en', 'ko', 'ja'];
+    const supportedLanguages = ['en', 'ja', 'ko'];
     const languageNames = {
         en: 'English',
         ko: '한국어',
@@ -12,7 +12,7 @@
             nav: { languageLabel: 'Language selection' },
             home: {
                 heroTitle: 'AI Chart Analysis Tool for Multi-Timeframe Trading',
-                heroDescription: 'ChartAnalyze is an AI chart analysis tool designed for multi-timeframe trading. Upload daily, hourly, and intraday chart screenshots to instantly analyze market trends, structure, and potential trading opportunities.',
+                heroDescription: 'ChartAnalyze is an AI chart analysis tool designed for multi-timeframe trading.\nUpload daily, hourly, and intraday chart screenshots to instantly analyze market trends, structure, and potential trading opportunities.',
                 uploadTitle: 'Upload Charts',
                 uploadDescription: 'Upload the chart images you want to analyze by timeframe.',
                 dailyChart: 'Daily chart',
@@ -84,7 +84,7 @@
             nav: { languageLabel: '언어 선택' },
             home: {
                 heroTitle: 'AI 차트 분석 도구｜멀티 타임프레임 트레이딩 분석',
-                heroDescription: 'ChartAnalyze는 멀티 타임프레임 트레이딩을 위한 AI 차트 분석 도구입니다. 일봉, 시간봉, 분봉 차트를 업로드하면 시장의 흐름과 구조, 잠재적인 트레이딩 기회를 빠르게 분석할 수 있습니다.',
+                heroDescription: 'ChartAnalyze는 멀티 타임프레임 트레이딩을 위한 AI 차트 분석 도구입니다.\n일봉, 시간봉, 분봉 차트를 업로드하면 시장의 흐름과 구조, 잠재적인 트레이딩 기회를 빠르게 분석할 수 있습니다.',
                 uploadTitle: '차트 업로드',
                 uploadDescription: '분석할 차트 이미지를 시간대별로 업로드하세요.',
                 dailyChart: '일봉 차트',
@@ -156,7 +156,7 @@
             nav: { languageLabel: '言語選択' },
             home: {
                 heroTitle: 'AIチャート分析ツール｜マルチタイムフレーム分析',
-                heroDescription: 'ChartAnalyzeは、マルチタイムフレーム分析に対応したAIチャート分析ツールです。日足・時間足・分足のチャートをアップロードすることで、相場の流れや構造、トレード機会を素早く把握できます。',
+                heroDescription: 'ChartAnalyzeは、マルチタイムフレーム分析に対応したAIチャート分析ツールです。\n日足・時間足・分足のチャートをアップロードすることで、相場の流れや構造、トレード機会を素早く把握できます。',
                 uploadTitle: 'チャートをアップロード',
                 uploadDescription: '分析するチャート画像を時間軸ごとにアップロードしてください。',
                 dailyChart: '日足チャート',
@@ -291,7 +291,19 @@
         document.title = translate('meta.title');
 
         document.querySelectorAll('[data-i18n]').forEach(element => {
-            element.textContent = translate(element.dataset.i18n);
+            const value = translate(element.dataset.i18n);
+            if (value.includes('\n')) {
+                element.replaceChildren(...value.split('\n').flatMap((line, index) => {
+                    const nodes = [];
+                    if (index > 0) {
+                        nodes.push(document.createElement('br'));
+                    }
+                    nodes.push(document.createTextNode(line));
+                    return nodes;
+                }));
+                return;
+            }
+            element.textContent = value;
         });
 
         document.querySelectorAll('[data-i18n-aria-label]').forEach(element => {

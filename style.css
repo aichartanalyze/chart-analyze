@@ -154,12 +154,6 @@ header p {
     max-width: 920px;
 }
 
-@media (min-width: 901px) {
-    header p {
-        white-space: nowrap;
-    }
-}
-
 .cta-button {
     background: var(--primary-gradient);
     color: white;
