@@ -11,8 +11,8 @@
             meta: { title: 'ChartAnalyze' },
             nav: { languageLabel: 'Language selection' },
             home: {
-                heroTitle: 'Simple Chart Flow Analysis',
-                heroDescription: 'Upload daily, hourly, and minute charts so AI can summarize the chart flow.',
+                heroTitle: 'AI Chart Analysis Tool for Multi-Timeframe Trading',
+                heroDescription: 'ChartAnalyze is an AI chart analysis tool designed for multi-timeframe trading. Upload daily, hourly, and intraday chart screenshots to instantly analyze market trends, structure, and potential trading opportunities.',
                 uploadTitle: 'Upload Charts',
                 uploadDescription: 'Upload the chart images you want to analyze by timeframe.',
                 dailyChart: 'Daily chart',
@@ -42,7 +42,7 @@
                 analysisFailed: 'Analysis failed: {message}',
             },
             analysis: {
-                heroTitle: 'Simple Chart Flow Analysis',
+                heroTitle: 'AI Chart Analysis Tool for Multi-Timeframe Trading',
                 heroDescription: 'Review your uploaded charts and AI analysis results.',
                 uploadedTitle: 'Uploaded Charts',
                 uploadedDescription: 'These are the chart images uploaded from the main page.',
@@ -83,8 +83,8 @@
             meta: { title: 'ChartAnalyze' },
             nav: { languageLabel: '언어 선택' },
             home: {
-                heroTitle: '차트 흐름 간단 분석',
-                heroDescription: '일봉, 시간봉, 분봉 차트를 업로드하면 AI가 차트 흐름을 요약합니다.',
+                heroTitle: 'AI 차트 분석 도구｜멀티 타임프레임 트레이딩 분석',
+                heroDescription: 'ChartAnalyze는 멀티 타임프레임 트레이딩을 위한 AI 차트 분석 도구입니다. 일봉, 시간봉, 분봉 차트를 업로드하면 시장의 흐름과 구조, 잠재적인 트레이딩 기회를 빠르게 분석할 수 있습니다.',
                 uploadTitle: '차트 업로드',
                 uploadDescription: '분석할 차트 이미지를 시간대별로 업로드하세요.',
                 dailyChart: '일봉 차트',
@@ -114,7 +114,7 @@
                 analysisFailed: '분석에 실패했습니다: {message}',
             },
             analysis: {
-                heroTitle: '차트 흐름 간단 분석',
+                heroTitle: 'AI 차트 분석 도구｜멀티 타임프레임 트레이딩 분석',
                 heroDescription: '업로드한 차트와 AI 분석 결과를 확인합니다.',
                 uploadedTitle: '업로드한 차트',
                 uploadedDescription: '인덱스 페이지에서 업로드한 차트 이미지입니다.',
@@ -155,8 +155,8 @@
             meta: { title: 'ChartAnalyze' },
             nav: { languageLabel: '言語選択' },
             home: {
-                heroTitle: 'チャートの流れを簡単分析',
-                heroDescription: '日足、時間足、分足のチャートをアップロードすると、AIが流れを要約します。',
+                heroTitle: 'AIチャート分析ツール｜マルチタイムフレーム分析',
+                heroDescription: 'ChartAnalyzeは、マルチタイムフレーム分析に対応したAIチャート分析ツールです。日足・時間足・分足のチャートをアップロードすることで、相場の流れや構造、トレード機会を素早く把握できます。',
                 uploadTitle: 'チャートをアップロード',
                 uploadDescription: '分析するチャート画像を時間軸ごとにアップロードしてください。',
                 dailyChart: '日足チャート',
@@ -186,7 +186,7 @@
                 analysisFailed: '分析に失敗しました: {message}',
             },
             analysis: {
-                heroTitle: 'チャートの流れを簡単分析',
+                heroTitle: 'AIチャート分析ツール｜マルチタイムフレーム分析',
                 heroDescription: 'アップロードしたチャートとAI分析結果を確認します。',
                 uploadedTitle: 'アップロードしたチャート',
                 uploadedDescription: 'メインページでアップロードしたチャート画像です。',
