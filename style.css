@@ -442,6 +442,48 @@ body.modal-open {
     color: var(--text-muted-color);
 }
 
+.seo-content-section {
+    margin: -22px auto 46px;
+    max-width: 920px;
+}
+
+.seo-content-inner {
+    color: var(--text-muted-color);
+    line-height: 1.75;
+}
+
+.seo-content-inner h2 {
+    color: var(--text-color);
+    font-size: 1.22rem;
+    margin: 34px 0 10px;
+    text-align: left;
+}
+
+.seo-content-inner h2:first-child {
+    margin-top: 0;
+}
+
+.seo-content-inner p {
+    margin: 0 0 14px;
+}
+
+.seo-content-inner ul {
+    display: grid;
+    gap: 8px;
+    margin: 0 0 16px;
+    padding-left: 20px;
+}
+
+.seo-content-inner li {
+    padding-left: 4px;
+}
+
+.seo-disclaimer {
+    color: var(--text-muted-color);
+    font-size: 0.9rem;
+    margin-top: 22px;
+}
+
 .start-analysis-section {
     text-align: center;
     margin-bottom: 100px;
