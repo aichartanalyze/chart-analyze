@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const i18n = window.ChartAnalyzeI18n;
+    const t = (key, values) => i18n?.t(key, values) || '';
     const startAnalysisBtn = document.querySelector('.start-analysis-section .cta-button');
     const uploadPlaceholders = document.querySelectorAll('.upload-placeholder');
     let activeUploadZone = null;
@@ -26,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
             img.style.objectFit = 'contain';
             img.style.borderRadius = '4px';
             dropZone.appendChild(img);
-        }
+        };
         reader.readAsDataURL(file);
     }
 
@@ -70,30 +72,35 @@ document.addEventListener('DOMContentLoaded', () => {
         const imagesData = [];
         document.querySelectorAll('.upload-box').forEach((box, index) => {
             const img = box.querySelector('.upload-placeholder img');
+            const timeframeKey = box.dataset.timeframe || `chart-${index + 1}`;
             if (img && img.src) {
                 imagesData.push({
-                    timeframe: box.querySelector('p').textContent,
+                    timeframe: i18n?.timeframeLabel(timeframeKey) || box.querySelector('p')?.textContent || timeframeKey,
+                    timeframeKey,
                     src: img.src,
-                    originalIndex: index
+                    originalIndex: index,
                 });
             }
         });
 
         if (imagesData.length === 0) {
-            alert("분석할 차트 이미지를 하나 이상 업로드해주세요.");
+            alert(t('home.noImageAlert'));
             return;
         }
 
         startAnalysisBtn.disabled = true;
-        startAnalysisBtn.textContent = '분석 중...';
+        startAnalysisBtn.textContent = t('home.analyzing');
         startAnalysisBtn.setAttribute('aria-busy', 'true');
 
         try {
             const analysisPromises = imagesData.map(async (imageData) => {
-                const response = await fetch('/.netlify/functions/analyzeImage', {
+                const response = await fetch(`/.netlify/functions/analyzeImage?language=${encodeURIComponent(i18n?.language || 'ko')}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ image: imageData.src }),
+                    body: JSON.stringify({
+                        image: imageData.src,
+                        language: i18n?.language || 'ko',
+                    }),
                 });
                 if (!response.ok) {
                     const errorBody = await response.json().catch(() => ({}));
@@ -103,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 const result = await response.json();
                 if (!result.analysis) {
-                    throw new Error('분석 결과가 비어 있습니다.');
+                    throw new Error(t('home.emptyAnalysisError'));
                 }
                 return {
                     ...imageData,
@@ -112,20 +119,16 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const results = await Promise.all(analysisPromises);
-
             sessionStorage.setItem('tradingAnalysisResults', JSON.stringify(results));
-
             window.location.href = 'analysis.html';
-
         } catch (error) {
-            console.error("이미지 분석 중 에러 발생:", error);
-            alert(`분석에 실패했습니다: ${error.message}`);
+            console.error('Image analysis error:', error);
+            alert(t('home.analysisFailed', { message: error.message }));
             startAnalysisBtn.disabled = false;
-            startAnalysisBtn.textContent = '분석 시작';
+            startAnalysisBtn.textContent = t('home.startAnalysis');
             startAnalysisBtn.removeAttribute('aria-busy');
         }
     }
-
 
     startAnalysisBtn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -155,8 +158,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 zone.click();
             }
         });
-        zone.addEventListener('dragover', (e) => { e.preventDefault(); e.stopPropagation(); zone.style.borderColor = '#6ACC75'; });
-        zone.addEventListener('dragleave', (e) => { e.preventDefault(); e.stopPropagation(); zone.style.borderColor = 'var(--border-color)'; });
+        zone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            zone.style.borderColor = '#6ACC75';
+        });
+        zone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            zone.style.borderColor = 'var(--border-color)';
+        });
         zone.addEventListener('drop', (e) => handleFileSelect(e, zone));
     });
 

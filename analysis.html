@@ -1,91 +1,22 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChartAnalyze</title>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5555956682379964"
-     crossorigin="anonymous"></script>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ECNDZVMMQY"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-ECNDZVMMQY');
+        (function() {
+            var language = (navigator.language || navigator.userLanguage || 'ko').toLowerCase();
+            var target = language.indexOf('ja') === 0 ? 'ja' : language.indexOf('en') === 0 ? 'en' : 'ko';
+            window.location.replace('/' + target + '/analysis.html');
+        })();
     </script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="style.css">
 </head>
-<body class="analysis-review-page">
-    <nav>
-        <div class="nav-container">
-            <div class="logo">
-                ChartAnalyze
-            </div>
-        </div>
+<body>
+    <nav aria-label="Language selection">
+        <a href="/en/analysis.html">English</a>
+        <a href="/ko/analysis.html">한국어</a>
+        <a href="/ja/analysis.html">日本語</a>
     </nav>
-
-    <header>
-        <div class="header-content">
-            <h1>차트 흐름 간단 분석</h1>
-            <p>업로드한 차트와 AI 분석 결과를 확인합니다.</p>
-        </div>
-    </header>
-
-    <main>
-        <section id="upload-section">
-            <h2>업로드한 차트</h2>
-            <p>인덱스 페이지에서 업로드한 차트 이미지입니다.</p>
-            <div class="chart-upload-container">
-                <div class="upload-box">
-                    <p>일봉 차트</p>
-                    <div class="upload-placeholder" data-image-slot="0">
-                        <span class="material-icons">image</span>
-                        <p>이미지를 불러오는 중입니다</p>
-                    </div>
-                    <div class="chart-flow-result pending" data-result-slot="0">분석 대기</div>
-                </div>
-                <div class="upload-box">
-                    <p>시간봉 차트</p>
-                    <div class="upload-placeholder" data-image-slot="1">
-                        <span class="material-icons">image</span>
-                        <p>이미지를 불러오는 중입니다</p>
-                    </div>
-                    <div class="chart-flow-result pending" data-result-slot="1">분석 대기</div>
-                </div>
-                <div class="upload-box">
-                    <p>분봉 차트</p>
-                    <div class="upload-placeholder" data-image-slot="2">
-                        <span class="material-icons">image</span>
-                        <p>이미지를 불러오는 중입니다</p>
-                    </div>
-                    <div class="chart-flow-result pending" data-result-slot="2">분석 대기</div>
-                </div>
-            </div>
-        </section>
-
-        <p id="analysis-message" class="analysis-inline-message">업로드한 이미지를 상승, 횡보, 하강 중 하나로 단순 분류합니다.</p>
-
-        <section class="start-analysis-section">
-            <a class="cta-button" href="index.html">다시 업로드</a>
-        </section>
-    </main>
-
-    <footer>
-        <p>본 서비스는 차트 흐름을 간단히 정리하는 도구이며, 투자 판단을 위한 참고용으로만 제공됩니다.</p>
-        <p>&copy; 2026 ChartAnalyze. 모든 권리 보유.</p>
-    </footer>
-
-    <div class="image-modal" id="image-modal" aria-hidden="true" role="dialog" aria-label="차트 이미지 확대 보기">
-        <button type="button" class="image-modal-close" aria-label="닫기">
-            <span class="material-icons">close</span>
-        </button>
-        <img alt="">
-    </div>
-
-    <script src="analysis.js"></script>
 </body>
 </html>

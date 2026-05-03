@@ -5,6 +5,21 @@
   directory = "netlify/functions/"
 
 [[redirects]]
+  from = "/en"
+  to = "/en/"
+  status = 301
+
+[[redirects]]
+  from = "/ko"
+  to = "/ko/"
+  status = 301
+
+[[redirects]]
+  from = "/ja"
+  to = "/ja/"
+  status = 301
+
+[[redirects]]
   from = "/"
   to = "/index.html"
   status = 200

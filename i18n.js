@@ -1,0 +1,286 @@
+(function() {
+    const supportedLanguages = ['en', 'ko', 'ja'];
+    const languageNames = {
+        en: 'English',
+        ko: '한국어',
+        ja: '日本語',
+    };
+
+    const translations = {
+        en: {
+            meta: { title: 'ChartAnalyze' },
+            nav: { languageLabel: 'Language selection' },
+            home: {
+                heroTitle: 'Simple Chart Flow Analysis',
+                heroDescription: 'Upload daily, hourly, and minute charts so AI can summarize the chart flow.',
+                uploadTitle: 'Upload Charts',
+                uploadDescription: 'Upload the chart images you want to analyze by timeframe.',
+                dailyChart: 'Daily chart',
+                hourlyChart: 'Hourly chart',
+                minuteChart: 'Minute chart',
+                uploadGuide: 'Drag, click, or paste an image to upload',
+                startAnalysis: 'Start analysis',
+                analyzing: 'Analyzing...',
+                noImageAlert: 'Please upload at least one chart image to analyze.',
+                emptyAnalysisError: 'The analysis result is empty.',
+                analysisFailed: 'Analysis failed: {message}',
+            },
+            analysis: {
+                heroTitle: 'Simple Chart Flow Analysis',
+                heroDescription: 'Review your uploaded charts and AI analysis results.',
+                uploadedTitle: 'Uploaded Charts',
+                uploadedDescription: 'These are the chart images uploaded from the main page.',
+                loadingImage: 'Loading image',
+                pending: 'Waiting for analysis',
+                guide: 'Uploaded images are simply classified as uptrend, sideways, or downtrend.',
+                reupload: 'Upload again',
+                noData: 'No analysis data found.',
+                noImage: 'No image',
+                noAnalysisData: 'No analysis data',
+                dataReadError: 'Unable to read analysis data.',
+                dataFormatError: 'The analysis data format is invalid.',
+                analysisDataError: 'Analysis data error',
+                complete: 'Analysis complete',
+                modalLabel: 'Enlarged chart image',
+                modalClose: 'Close',
+                zoomLabel: 'Enlarge {timeframe}',
+                chartAlt: '{timeframe}',
+                labels: {
+                    status: 'Status',
+                    resistance: 'Resistance',
+                    support: 'Support',
+                    analysis: 'Analysis',
+                },
+                statuses: {
+                    up: 'Uptrend',
+                    down: 'Downtrend',
+                    sideways: 'Sideways',
+                    unknown: 'N/A',
+                },
+            },
+            footer: {
+                disclaimer: 'This service is a simple chart-flow summary tool and is provided for reference only, not for investment decisions.',
+                copyright: '© 2026 ChartAnalyze. All rights reserved.',
+            },
+        },
+        ko: {
+            meta: { title: 'ChartAnalyze' },
+            nav: { languageLabel: '언어 선택' },
+            home: {
+                heroTitle: '차트 흐름 간단 분석',
+                heroDescription: '일봉, 시간봉, 분봉 차트를 업로드하면 AI가 흐름을 분석합니다.',
+                uploadTitle: '차트 업로드',
+                uploadDescription: '분석할 차트 이미지를 시간대별로 업로드하세요.',
+                dailyChart: '일봉 차트',
+                hourlyChart: '시간봉 차트',
+                minuteChart: '분봉 차트',
+                uploadGuide: '이미지를 드래그, 클릭, 붙여넣기로 업로드',
+                startAnalysis: '분석 시작',
+                analyzing: '분석 중...',
+                noImageAlert: '분석할 차트 이미지를 하나 이상 업로드해주세요.',
+                emptyAnalysisError: '분석 결과가 비어 있습니다.',
+                analysisFailed: '분석에 실패했습니다: {message}',
+            },
+            analysis: {
+                heroTitle: '차트 흐름 간단 분석',
+                heroDescription: '업로드한 차트와 AI 분석 결과를 확인합니다.',
+                uploadedTitle: '업로드한 차트',
+                uploadedDescription: '인덱스 페이지에서 업로드한 차트 이미지입니다.',
+                loadingImage: '이미지를 불러오는 중입니다',
+                pending: '분석 대기',
+                guide: '업로드한 이미지를 상승, 횡보, 하강 중 하나로 단순 분류합니다.',
+                reupload: '다시 업로드',
+                noData: '분석할 데이터가 없습니다.',
+                noImage: '이미지 없음',
+                noAnalysisData: '분석 데이터 없음',
+                dataReadError: '분석 데이터를 읽을 수 없습니다.',
+                dataFormatError: '분석 데이터 형식이 올바르지 않습니다.',
+                analysisDataError: '분석 데이터 오류',
+                complete: '분석 완료',
+                modalLabel: '차트 이미지 확대 보기',
+                modalClose: '닫기',
+                zoomLabel: '{timeframe} 확대',
+                chartAlt: '{timeframe}',
+                labels: {
+                    status: '상태',
+                    resistance: '저항선',
+                    support: '지지선',
+                    analysis: '분석',
+                },
+                statuses: {
+                    up: '상승',
+                    down: '하강',
+                    sideways: '횡보',
+                    unknown: 'N/A',
+                },
+            },
+            footer: {
+                disclaimer: '본 서비스는 차트 흐름을 간단히 정리하는 도구이며, 투자 판단을 위한 참고용으로만 제공됩니다.',
+                copyright: '© 2026 ChartAnalyze. 모든 권리 보유.',
+            },
+        },
+        ja: {
+            meta: { title: 'ChartAnalyze' },
+            nav: { languageLabel: '言語選択' },
+            home: {
+                heroTitle: 'チャートの流れを簡単分析',
+                heroDescription: '日足、時間足、分足のチャートをアップロードすると、AIが流れを分析します。',
+                uploadTitle: 'チャートをアップロード',
+                uploadDescription: '分析するチャート画像を時間軸ごとにアップロードしてください。',
+                dailyChart: '日足チャート',
+                hourlyChart: '時間足チャート',
+                minuteChart: '分足チャート',
+                uploadGuide: '画像をドラッグ、クリック、または貼り付けてアップロード',
+                startAnalysis: '分析開始',
+                analyzing: '分析中...',
+                noImageAlert: '分析するチャート画像を1枚以上アップロードしてください。',
+                emptyAnalysisError: '分析結果が空です。',
+                analysisFailed: '分析に失敗しました: {message}',
+            },
+            analysis: {
+                heroTitle: 'チャートの流れを簡単分析',
+                heroDescription: 'アップロードしたチャートとAI分析結果を確認します。',
+                uploadedTitle: 'アップロードしたチャート',
+                uploadedDescription: 'メインページでアップロードしたチャート画像です。',
+                loadingImage: '画像を読み込んでいます',
+                pending: '分析待ち',
+                guide: 'アップロードした画像を上昇、横ばい、下落のいずれかに簡単分類します。',
+                reupload: '再アップロード',
+                noData: '分析するデータがありません。',
+                noImage: '画像なし',
+                noAnalysisData: '分析データなし',
+                dataReadError: '分析データを読み取れません。',
+                dataFormatError: '分析データの形式が正しくありません。',
+                analysisDataError: '分析データエラー',
+                complete: '分析完了',
+                modalLabel: 'チャート画像の拡大表示',
+                modalClose: '閉じる',
+                zoomLabel: '{timeframe}を拡大',
+                chartAlt: '{timeframe}',
+                labels: {
+                    status: '状態',
+                    resistance: '抵抗線',
+                    support: '支持線',
+                    analysis: '分析',
+                },
+                statuses: {
+                    up: '上昇',
+                    down: '下落',
+                    sideways: '横ばい',
+                    unknown: 'N/A',
+                },
+            },
+            footer: {
+                disclaimer: '本サービスはチャートの流れを簡単に整理するツールであり、投資判断ではなく参考用として提供されます。',
+                copyright: '© 2026 ChartAnalyze. All rights reserved.',
+            },
+        },
+    };
+
+    function detectBrowserLanguage() {
+        const language = (navigator.language || navigator.userLanguage || 'ko').toLowerCase();
+        if (language.startsWith('ja')) return 'ja';
+        if (language.startsWith('en')) return 'en';
+        return 'ko';
+    }
+
+    function getLanguageFromPath() {
+        const firstSegment = window.location.pathname.split('/').filter(Boolean)[0];
+        return supportedLanguages.includes(firstSegment) ? firstSegment : detectBrowserLanguage();
+    }
+
+    function getCurrentPage() {
+        return window.location.pathname.indexOf('analysis') !== -1 ? 'analysis.html' : '';
+    }
+
+    const currentLanguage = getLanguageFromPath();
+
+    function getValue(path) {
+        return path.split('.').reduce((source, key) => source && source[key], translations[currentLanguage]);
+    }
+
+    function format(template, values = {}) {
+        return String(template || '').replace(/\{(\w+)\}/g, (_, key) => values[key] ?? '');
+    }
+
+    function translate(path, values = {}) {
+        return format(getValue(path), values);
+    }
+
+    function timeframeLabel(key) {
+        const map = {
+            daily: 'home.dailyChart',
+            hourly: 'home.hourlyChart',
+            minute: 'home.minuteChart',
+        };
+        return translate(map[key] || key);
+    }
+
+    function statusLabel(status) {
+        const map = {
+            '상승': 'analysis.statuses.up',
+            up: 'analysis.statuses.up',
+            uptrend: 'analysis.statuses.up',
+            '하강': 'analysis.statuses.down',
+            down: 'analysis.statuses.down',
+            downtrend: 'analysis.statuses.down',
+            '횡보': 'analysis.statuses.sideways',
+            sideways: 'analysis.statuses.sideways',
+        };
+        return translate(map[String(status || '').toLowerCase()] || map[status] || 'analysis.statuses.unknown');
+    }
+
+    function statusClass(status) {
+        const value = String(status || '').toLowerCase();
+        if (status === '상승' || value === 'up' || value === 'uptrend') return 'up';
+        if (status === '하강' || value === 'down' || value === 'downtrend') return 'down';
+        if (status === '횡보' || value === 'sideways') return 'sideways';
+        return 'pending';
+    }
+
+    function applyStaticTranslations() {
+        document.documentElement.lang = currentLanguage;
+        document.title = translate('meta.title');
+
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            element.textContent = translate(element.dataset.i18n);
+        });
+
+        document.querySelectorAll('[data-i18n-aria-label]').forEach(element => {
+            element.setAttribute('aria-label', translate(element.dataset.i18nAriaLabel));
+        });
+
+        renderLanguageSelector();
+    }
+
+    function renderLanguageSelector() {
+        const page = getCurrentPage();
+        document.querySelectorAll('[data-language-selector]').forEach(container => {
+            container.setAttribute('aria-label', translate('nav.languageLabel'));
+            container.replaceChildren(...supportedLanguages.map(language => {
+                const link = document.createElement('a');
+                link.href = `/${language}/${page}`;
+                link.textContent = languageNames[language];
+                link.lang = language;
+                if (language === currentLanguage) {
+                    link.setAttribute('aria-current', 'true');
+                }
+                return link;
+            }));
+        });
+    }
+
+    window.ChartAnalyzeI18n = {
+        language: currentLanguage,
+        languages: supportedLanguages,
+        translations,
+        languageNames,
+        t: translate,
+        apply: applyStaticTranslations,
+        timeframeLabel,
+        statusLabel,
+        statusClass,
+    };
+
+    document.addEventListener('DOMContentLoaded', applyStaticTranslations);
+})();

@@ -46,7 +46,34 @@ nav {
 
 /* --- Language Selector --- */
 .language-selector {
-    position: relative;
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: flex-end;
+}
+
+.language-selector a {
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: var(--text-muted-color);
+    font-size: 0.9rem;
+    line-height: 1;
+    padding: 8px 10px;
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.language-selector a:hover,
+.language-selector a:focus-visible {
+    background-color: var(--card-color);
+    color: var(--text-color);
+    outline: none;
+}
+
+.language-selector a[aria-current="true"] {
+    border-color: rgba(106, 204, 117, 0.55);
+    color: var(--text-color);
 }
 
 .language-button {
@@ -793,6 +820,16 @@ footer p { margin: 0; }
 }
 
 @media (max-width: 640px) {
+    .nav-container {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .language-selector {
+        justify-content: flex-start;
+    }
+
     header {
         padding: 22px 5% 24px;
         min-height: 0;

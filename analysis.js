@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const i18n = window.ChartAnalyzeI18n;
+    const t = (key, values) => i18n?.t(key, values) || '';
     const message = document.getElementById('analysis-message');
     const imageSlots = document.querySelectorAll('[data-image-slot]');
     const resultSlots = document.querySelectorAll('[data-result-slot]');
@@ -9,13 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function displayAnalysisResults() {
         const resultsJSON = sessionStorage.getItem('tradingAnalysisResults');
         if (!resultsJSON) {
-            message.textContent = '분석할 데이터가 없습니다.';
-            imageSlots.forEach(slot => {
-                slot.innerHTML = '<span class="material-icons">image_not_supported</span><p>이미지 없음</p>';
-            });
-            resultSlots.forEach(slot => {
-                renderEmptyAnalysis(slot, '분석 데이터 없음');
-            });
+            message.textContent = t('analysis.noData');
+            renderNoImageSlots();
+            resultSlots.forEach(slot => renderEmptyAnalysis(slot, t('analysis.noAnalysisData')));
             return;
         }
 
@@ -23,60 +21,56 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             results = JSON.parse(resultsJSON);
         } catch (error) {
-            message.textContent = '분석 데이터를 읽을 수 없습니다.';
-            imageSlots.forEach(slot => {
-                slot.innerHTML = '<span class="material-icons">image_not_supported</span><p>이미지 없음</p>';
-            });
-            resultSlots.forEach(slot => {
-                renderEmptyAnalysis(slot, '분석 데이터 오류');
-            });
+            message.textContent = t('analysis.dataReadError');
+            renderNoImageSlots();
+            resultSlots.forEach(slot => renderEmptyAnalysis(slot, t('analysis.analysisDataError')));
             return;
         }
 
         if (!Array.isArray(results)) {
-            message.textContent = '분석 데이터 형식이 올바르지 않습니다.';
-            resultSlots.forEach(slot => {
-                renderEmptyAnalysis(slot, '분석 데이터 오류');
-            });
+            message.textContent = t('analysis.dataFormatError');
+            resultSlots.forEach(slot => renderEmptyAnalysis(slot, t('analysis.analysisDataError')));
             return;
         }
 
-        message.textContent = '분석 완료';
-
-        // Clear all slots first
-        imageSlots.forEach(slot => {
-            slot.innerHTML = '<span class="material-icons">image_not_supported</span><p>이미지 없음</p>';
-        });
-        resultSlots.forEach(slot => {
-            renderEmptyAnalysis(slot, '분석 데이터 없음');
-        });
+        message.textContent = t('analysis.complete');
+        renderNoImageSlots();
+        resultSlots.forEach(slot => renderEmptyAnalysis(slot, t('analysis.noAnalysisData')));
 
         results.forEach(result => {
-            const { originalIndex, src, timeframe, analysis } = result;
+            const { originalIndex, src, timeframeKey, analysis } = result;
+            const timeframe = i18n?.timeframeLabel(timeframeKey) || result.timeframe || '';
 
-            // Render image
             const imageSlot = document.querySelector(`[data-image-slot="${originalIndex}"]`);
             if (imageSlot) {
                 const img = document.createElement('img');
                 img.src = src;
-                img.alt = `${timeframe} 차트`;
+                img.alt = t('analysis.chartAlt', { timeframe });
                 const zoomButton = document.createElement('button');
                 zoomButton.type = 'button';
                 zoomButton.className = 'image-zoom-button';
-                zoomButton.setAttribute('aria-label', `${timeframe} 차트 확대`);
+                zoomButton.setAttribute('aria-label', t('analysis.zoomLabel', { timeframe }));
                 zoomButton.innerHTML = '<span class="material-icons">zoom_in</span>';
                 zoomButton.addEventListener('click', () => {
-                    openImageModal(src, `${timeframe} 차트`);
+                    openImageModal(src, t('analysis.chartAlt', { timeframe }));
                 });
-                imageSlot.innerHTML = ''; // Clear placeholder
+                imageSlot.innerHTML = '';
                 imageSlot.append(img, zoomButton);
             }
 
-            // Render analysis
             const resultSlot = document.querySelector(`[data-result-slot="${originalIndex}"]`);
             if (resultSlot) {
                 renderAnalysis(resultSlot, analysis);
             }
+        });
+    }
+
+    function renderNoImageSlots() {
+        imageSlots.forEach(slot => {
+            slot.replaceChildren(
+                createIcon('image_not_supported'),
+                createParagraph(t('analysis.noImage')),
+            );
         });
     }
 
@@ -92,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             return JSON.parse(markdown);
         } catch (error) {
-            // 이전 마크다운 응답 형식도 계속 표시할 수 있게 둔다.
+            // Keep supporting the older markdown response format.
         }
 
         const lines = markdown.split('\n').filter(line => line.trim() !== '');
@@ -111,36 +105,49 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderAnalysis(slot, markdown) {
         const data = parseAnalysis(markdown);
 
-        const status = data['상태'] || 'N/A';
-        const resistance = data['저항선'] || 'N/A';
-        const support = data['지지선'] || 'N/A';
-        const analysisText = data['분석'] || data['포지션'] || 'N/A';
+        const rawStatus = data['상태'] || data.status || '';
+        const resistance = data['저항선'] || data.resistance || 'N/A';
+        const support = data['지지선'] || data.support || 'N/A';
+        const analysisText = data['분석'] || data['포지션'] || data.analysis || 'N/A';
 
-        const statusMap = {
-            '상승': { className: 'up', icon: 'trending_up' },
-            '하강': { className: 'down', icon: 'trending_down' },
-            '횡보': { className: 'sideways', icon: 'trending_flat' }
+        const statusClass = i18n?.statusClass(rawStatus) || 'pending';
+        const iconMap = {
+            up: 'trending_up',
+            down: 'trending_down',
+            sideways: 'trending_flat',
+            pending: 'help_outline',
         };
 
-        const statusInfo = statusMap[status] || { className: 'pending', icon: 'help_outline' };
-
-        slot.className = `chart-flow-result ${statusInfo.className}`;
+        slot.className = `chart-flow-result ${statusClass}`;
         slot.replaceChildren(
-            createFlowRow('상태', status, 'status-row', statusInfo.icon),
-            createFlowRow('저항선', resistance),
-            createFlowRow('지지선', support),
-            createFlowRow('분석', analysisText, 'position-row')
+            createFlowRow(t('analysis.labels.status'), i18n?.statusLabel(rawStatus) || rawStatus || 'N/A', 'status-row', iconMap[statusClass]),
+            createFlowRow(t('analysis.labels.resistance'), resistance),
+            createFlowRow(t('analysis.labels.support'), support),
+            createFlowRow(t('analysis.labels.analysis'), analysisText, 'position-row'),
         );
     }
 
     function renderEmptyAnalysis(slot, value) {
         slot.className = 'chart-flow-result pending';
         slot.replaceChildren(
-            createFlowRow('상태', value, 'status-row'),
-            createFlowRow('저항선', value),
-            createFlowRow('지지선', value),
-            createFlowRow('분석', value, 'position-row')
+            createFlowRow(t('analysis.labels.status'), value, 'status-row'),
+            createFlowRow(t('analysis.labels.resistance'), value),
+            createFlowRow(t('analysis.labels.support'), value),
+            createFlowRow(t('analysis.labels.analysis'), value, 'position-row'),
         );
+    }
+
+    function createIcon(name) {
+        const icon = document.createElement('span');
+        icon.className = 'material-icons';
+        icon.textContent = name;
+        return icon;
+    }
+
+    function createParagraph(text) {
+        const paragraph = document.createElement('p');
+        paragraph.textContent = text;
+        return paragraph;
     }
 
     function createFlowRow(label, value, extraClass = '', icon = '') {
@@ -152,10 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const valueElement = document.createElement('strong');
         if (icon) {
-            const iconElement = document.createElement('span');
-            iconElement.className = 'material-icons';
-            iconElement.textContent = icon;
-            valueElement.appendChild(iconElement);
+            valueElement.appendChild(createIcon(icon));
         }
         valueElement.append(document.createTextNode(value));
 

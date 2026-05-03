@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chart Analysis Tool | ChartAnalyze</title>
+    <meta name="description" content="Upload daily, hourly, and intraday chart screenshots and get AI-powered multi-timeframe trading analysis.">
+    <meta property="og:title" content="AI Chart Analysis Tool | ChartAnalyze">
+    <meta property="og:description" content="Upload daily, hourly, and intraday chart screenshots and get AI-powered multi-timeframe trading analysis.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://chartanalyze.com/en/analysis.html">
+    <link rel="canonical" href="https://chartanalyze.com/en/analysis.html">
+    <link rel="alternate" hreflang="ko" href="https://chartanalyze.netlify.app/ko/">
+    <link rel="alternate" hreflang="en" href="https://chartanalyze.netlify.app/en/">
+    <link rel="alternate" hreflang="ja" href="https://chartanalyze.netlify.app/ja/">
+    <link rel="alternate" hreflang="x-default" href="https://chartanalyze.netlify.app/en/">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5555956682379964" crossorigin="anonymous"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ECNDZVMMQY"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ECNDZVMMQY');
+    </script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body class="analysis-review-page">
+    <nav>
+        <div class="nav-container">
+            <div class="logo">ChartAnalyze</div>
+            <div class="language-selector" data-language-selector aria-label="Language selection">
+                <a href="/en/analysis.html">English</a>
+                <a href="/ko/analysis.html">한국어</a>
+                <a href="/ja/analysis.html">日本語</a>
+            </div>
+        </div>
+    </nav>
+    <header>
+        <div class="header-content">
+            <h1 data-i18n="analysis.heroTitle"></h1>
+            <p data-i18n="analysis.heroDescription"></p>
+        </div>
+    </header>
+    <main>
+        <section id="upload-section">
+            <h2 data-i18n="analysis.uploadedTitle"></h2>
+            <p data-i18n="analysis.uploadedDescription"></p>
+            <div class="chart-upload-container">
+                <div class="upload-box" data-timeframe="daily">
+                    <p data-i18n="home.dailyChart"></p>
+                    <div class="upload-placeholder" data-image-slot="0"><span class="material-icons">image</span><p data-i18n="analysis.loadingImage"></p></div>
+                    <div class="chart-flow-result pending" data-result-slot="0" data-i18n="analysis.pending"></div>
+                </div>
+                <div class="upload-box" data-timeframe="hourly">
+                    <p data-i18n="home.hourlyChart"></p>
+                    <div class="upload-placeholder" data-image-slot="1"><span class="material-icons">image</span><p data-i18n="analysis.loadingImage"></p></div>
+                    <div class="chart-flow-result pending" data-result-slot="1" data-i18n="analysis.pending"></div>
+                </div>
+                <div class="upload-box" data-timeframe="minute">
+                    <p data-i18n="home.minuteChart"></p>
+                    <div class="upload-placeholder" data-image-slot="2"><span class="material-icons">image</span><p data-i18n="analysis.loadingImage"></p></div>
+                    <div class="chart-flow-result pending" data-result-slot="2" data-i18n="analysis.pending"></div>
+                </div>
+            </div>
+        </section>
+        <p id="analysis-message" class="analysis-inline-message" data-i18n="analysis.guide"></p>
+        <section class="start-analysis-section">
+            <a class="cta-button" href="./" data-i18n="analysis.reupload"></a>
+        </section>
+    </main>
+    <footer>
+        <p data-i18n="footer.disclaimer"></p>
+        <p data-i18n="footer.copyright"></p>
+    </footer>
+    <div class="image-modal" id="image-modal" aria-hidden="true" role="dialog" data-i18n-aria-label="analysis.modalLabel">
+        <button type="button" class="image-modal-close" data-i18n-aria-label="analysis.modalClose"><span class="material-icons">close</span></button>
+        <img alt="">
+    </div>
+    <script src="../i18n.js"></script>
+    <script src="../analysis.js"></script>
+</body>
+</html>
