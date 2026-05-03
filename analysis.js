@@ -4,6 +4,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const message = document.getElementById('analysis-message');
     const imageSlots = document.querySelectorAll('[data-image-slot]');
     const resultSlots = document.querySelectorAll('[data-result-slot]');
+    const overallAnalysis = document.getElementById('overall-analysis');
+    const overallStatus = overallAnalysis?.querySelector('[data-overall-status]');
+    const overallDescription = overallAnalysis?.querySelector('[data-overall-description]');
     const imageModal = document.getElementById('image-modal');
     const imageModalImg = imageModal?.querySelector('img');
     const imageModalClose = imageModal?.querySelector('.image-modal-close');
@@ -14,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
             message.textContent = t('analysis.noData');
             renderNoImageSlots();
             resultSlots.forEach(slot => renderEmptyAnalysis(slot, t('analysis.noAnalysisData')));
+            renderOverallAnalysis([]);
             return;
         }
 
@@ -24,18 +28,22 @@ document.addEventListener('DOMContentLoaded', () => {
             message.textContent = t('analysis.dataReadError');
             renderNoImageSlots();
             resultSlots.forEach(slot => renderEmptyAnalysis(slot, t('analysis.analysisDataError')));
+            renderOverallAnalysis([]);
             return;
         }
 
         if (!Array.isArray(results)) {
             message.textContent = t('analysis.dataFormatError');
             resultSlots.forEach(slot => renderEmptyAnalysis(slot, t('analysis.analysisDataError')));
+            renderOverallAnalysis([]);
             return;
         }
 
         message.textContent = t('analysis.complete');
         renderNoImageSlots();
         resultSlots.forEach(slot => renderEmptyAnalysis(slot, t('analysis.noAnalysisData')));
+
+        const parsedResults = [];
 
         results.forEach(result => {
             const { originalIndex, src, timeframeKey, analysis } = result;
@@ -58,11 +66,64 @@ document.addEventListener('DOMContentLoaded', () => {
                 imageSlot.append(img, zoomButton);
             }
 
+            const parsedAnalysis = parseAnalysis(analysis);
+            parsedResults.push(parsedAnalysis);
+
             const resultSlot = document.querySelector(`[data-result-slot="${originalIndex}"]`);
             if (resultSlot) {
-                renderAnalysis(resultSlot, analysis);
+                renderAnalysis(resultSlot, parsedAnalysis);
             }
         });
+
+        renderOverallAnalysis(parsedResults);
+    }
+
+
+    function getRawStatus(data) {
+        return data?.['상태'] || data?.status || '';
+    }
+
+    function getOverallResult(parsedResults) {
+        const counts = { up: 0, down: 0, sideways: 0 };
+
+        parsedResults.forEach(data => {
+            const statusClass = i18n?.statusClass(getRawStatus(data));
+            if (statusClass === 'up' || statusClass === 'down' || statusClass === 'sideways') {
+                counts[statusClass] += 1;
+            }
+        });
+
+        const total = counts.up + counts.down + counts.sideways;
+        if (total === 0) {
+            return { className: 'pending', labelKey: 'analysis.overallInsufficient', descriptionKey: 'analysis.overallInsufficientDescription' };
+        }
+
+        const maxCount = Math.max(counts.up, counts.down, counts.sideways);
+        const leaders = Object.entries(counts).filter(([, count]) => count === maxCount).map(([key]) => key);
+
+        if (leaders.length !== 1) {
+            return { className: 'mixed', labelKey: 'analysis.overallMixed', descriptionKey: 'analysis.overallMixedDescription' };
+        }
+
+        const leader = leaders[0];
+        const keyMap = {
+            up: { labelKey: 'analysis.overallUp', descriptionKey: 'analysis.overallUpDescription' },
+            down: { labelKey: 'analysis.overallDown', descriptionKey: 'analysis.overallDownDescription' },
+            sideways: { labelKey: 'analysis.overallSideways', descriptionKey: 'analysis.overallSidewaysDescription' },
+        };
+
+        return { className: leader, ...keyMap[leader] };
+    }
+
+    function renderOverallAnalysis(parsedResults) {
+        if (!overallAnalysis || !overallStatus || !overallDescription) {
+            return;
+        }
+
+        const result = getOverallResult(parsedResults);
+        overallAnalysis.className = `overall-analysis-card ${result.className}`;
+        overallStatus.textContent = t(result.labelKey);
+        overallDescription.textContent = t(result.descriptionKey);
     }
 
     function renderNoImageSlots() {
@@ -105,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderAnalysis(slot, markdown) {
         const data = parseAnalysis(markdown);
 
-        const rawStatus = data['상태'] || data.status || '';
+        const rawStatus = getRawStatus(data);
         const resistance = data['저항선'] || data.resistance || 'N/A';
         const support = data['지지선'] || data.support || 'N/A';
         const analysisText = data['분석'] || data['포지션'] || data.analysis || 'N/A';
