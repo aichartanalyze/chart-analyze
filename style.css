@@ -607,6 +607,17 @@ footer {
 
 footer p { margin: 0; }
 
+.footer-link {
+    color: var(--text-muted-color);
+    text-decoration: none;
+}
+
+.footer-link:hover,
+.footer-link:focus-visible {
+    color: var(--text-color);
+    text-decoration: underline;
+}
+
 /* --- Analysis Page --- */
 .analysis-page .analysis-back-link {
     color: var(--text-color);
